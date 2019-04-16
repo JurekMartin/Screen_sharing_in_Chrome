@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <button onclick = "playStream(true, false);">Start screen sharing stream</button>
+    <button onclick = "videoStream();">Start video stream</button>
+    <button onclick = "stopStream();">Stop all streams</button>
+
+    <video id="vid" autoplay></video>
+
+</body>
+
+<script>
+
+    let stream;
+
+    async function videoStream() {
+        stopStream();
+        stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true});
+        document.getElementById("vid").srcObject = stream;
+    }
+
+    async function playStream() {
+        stopStream();
+        stream = await navigator.mediaDevices.getDisplayMedia();
+        document.getElementById("vid").srcObject = stream;
+    }
+
+    function stopStream() {
+        if (stream) {
+            let tracks = stream.getTracks();
+
+            tracks.forEach(function(track) {
+            track.stop();
+            });
+        }
+        document.getElementById("vid").srcObject = null;
+    }
+
+</script>
+
+<style>
+    #vid {
+        display: block;
+        max-height: 600px;
+        max-width: 600px;
+    }
+</style>
